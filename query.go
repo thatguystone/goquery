@@ -4,7 +4,6 @@ import (
 	"regexp"
 	"strings"
 
-	"code.google.com/p/cascadia"
 	"code.google.com/p/go.net/html"
 )
 
@@ -15,7 +14,7 @@ var rxClassTrim = regexp.MustCompile("[\t\r\n]")
 func (s *Selection) Is(selector string) bool {
 	if len(s.Nodes) > 0 {
 		// Attempt a match with the selector
-		cs := cascadia.MustCompile(selector)
+		cs := getSelector(selector)
 		if len(s.Nodes) == 1 {
 			return cs.Match(s.Nodes[0])
 		}

@@ -1,7 +1,6 @@
 package goquery
 
 import (
-	"code.google.com/p/cascadia"
 	"code.google.com/p/go.net/html"
 )
 
@@ -96,7 +95,7 @@ func (s *Selection) ParentFiltered(selector string) *Selection {
 // Closest gets the first element that matches the selector by testing the
 // element itself and traversing up through its ancestors in the DOM tree.
 func (s *Selection) Closest(selector string) *Selection {
-	cs := cascadia.MustCompile(selector)
+	cs := getSelector(selector)
 
 	return pushStack(s, mapNodes(s.Nodes, func(i int, n *html.Node) []*html.Node {
 		// For each node in the selection, test the node itself, then each parent
@@ -376,7 +375,7 @@ func filterAndPush(srcSel *Selection, nodes []*html.Node, selector string) *Sele
 // Internal implementation of Find that return raw nodes.
 func findWithSelector(nodes []*html.Node, selector string) []*html.Node {
 	// Compile the selector once
-	sel := cascadia.MustCompile(selector)
+	sel := getSelector(selector)
 	// Map nodes to find the matches within the children of each node
 	return mapNodes(nodes, func(i int, n *html.Node) (result []*html.Node) {
 		// Go down one level, becausejQuery's Find selects only within descendants

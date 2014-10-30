@@ -1,7 +1,6 @@
 package goquery
 
 import (
-	"code.google.com/p/cascadia"
 	"code.google.com/p/go.net/html"
 )
 
@@ -109,7 +108,7 @@ func (s *Selection) End() *Selection {
 // Filter based on a selector string, and the indicator to keep (Filter) or
 // to get rid of (Not) the matching elements.
 func winnow(sel *Selection, selector string, keep bool) []*html.Node {
-	cs := cascadia.MustCompile(selector)
+	cs := getSelector(selector)
 
 	// Optimize if keep is requested
 	if keep {
