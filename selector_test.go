@@ -29,7 +29,7 @@ func TestSelectorCache(t *testing.T) {
 	}
 
 	if selectorLru.Len() != selectorCacheSize {
-		t.Error("Expected selectorLru to have %d selectors, has %d",
+		t.Errorf("Expected selectorLru to have %d selectors, has %d",
 			selectorLru.Len(),
 			selectorCacheSize)
 	}
