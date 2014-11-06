@@ -9,8 +9,17 @@ import (
 // returns true if at least one of these elements matches.
 func (s *Selection) Is(selector string) bool {
 	if len(s.Nodes) > 0 {
+		return s.IsCompiled(cascadia.MustCompile(selector))
+	}
+
+	return false
+}
+
+// Is checks the current matched set of elements against a pre-compiled selector
+// and returns true if at least one of these elements matches.
+func (s *Selection) IsCompiled(cs cascadia.Selector) bool {
+	if len(s.Nodes) > 0 {
 		// Attempt a match with the selector
-		cs := cascadia.MustCompile(selector)
 		if len(s.Nodes) == 1 {
 			return cs.Match(s.Nodes[0])
 		}

@@ -1,6 +1,7 @@
 package goquery
 
 import (
+	"code.google.com/p/cascadia"
 	"code.google.com/p/go.net/html"
 )
 
@@ -9,7 +10,15 @@ import (
 // The selector string is run in the context of the document of the current
 // Selection object.
 func (s *Selection) Add(selector string) *Selection {
-	return s.AddNodes(findWithSelector([]*html.Node{s.document.rootNode}, selector)...)
+	return s.AddNodes(findWithSelector([]*html.Node{s.document.rootNode}, selector, nil)...)
+}
+
+// AddCompiled adds the pre-compiled selector's matching nodes to those in the current
+// selection and returns a new Selection object.
+// The selector string is run in the context of the document of the current
+// Selection object.
+func (s *Selection) AddCompiled(cs cascadia.Selector) *Selection {
+	return s.AddNodes(findWithSelector([]*html.Node{s.document.rootNode}, "", cs)...)
 }
 
 // AddSelection adds the specified Selection object's nodes to those in the

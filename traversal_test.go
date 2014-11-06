@@ -3,11 +3,16 @@ package goquery
 import (
 	"strings"
 	"testing"
+
+	"code.google.com/p/cascadia"
 )
 
 func TestFind(t *testing.T) {
 	sel := Doc().Find("div.row-fluid")
 	AssertLength(t, sel.Nodes, 9)
+
+	selc := Doc().FindCompiled(cascadia.MustCompile("div.row-fluid"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestFindRollback(t *testing.T) {
@@ -56,6 +61,9 @@ func TestContentsRollback(t *testing.T) {
 func TestChildrenFiltered(t *testing.T) {
 	sel := Doc().Find(".pvk-content").ChildrenFiltered(".hero-unit")
 	AssertLength(t, sel.Nodes, 1)
+
+	selc := Doc().Find(".pvk-content").ChildrenFilteredCompiled(cascadia.MustCompile(".hero-unit"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestChildrenFilteredRollback(t *testing.T) {
@@ -67,6 +75,9 @@ func TestChildrenFilteredRollback(t *testing.T) {
 func TestContentsFiltered(t *testing.T) {
 	sel := Doc().Find(".pvk-content").ContentsFiltered(".hero-unit")
 	AssertLength(t, sel.Nodes, 1)
+
+	selc := Doc().Find(".pvk-content").ContentsFilteredCompiled(cascadia.MustCompile(".hero-unit"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestContentsFilteredRollback(t *testing.T) {
@@ -100,6 +111,9 @@ func TestParentFiltered(t *testing.T) {
 	sel := Doc().Find(".container-fluid").ParentFiltered(".hero-unit")
 	AssertLength(t, sel.Nodes, 1)
 	AssertClass(t, sel, "hero-unit")
+
+	selc := Doc().Find(".container-fluid").ParentFilteredCompiled(cascadia.MustCompile(".hero-unit"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestParentFilteredRollback(t *testing.T) {
@@ -128,6 +142,9 @@ func TestParentsRollback(t *testing.T) {
 func TestParentsFiltered(t *testing.T) {
 	sel := Doc().Find(".container-fluid").ParentsFiltered("body")
 	AssertLength(t, sel.Nodes, 1)
+
+	selc := Doc().Find(".container-fluid").ParentsFilteredCompiled(cascadia.MustCompile("body"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestParentsFilteredRollback(t *testing.T) {
@@ -139,6 +156,9 @@ func TestParentsFilteredRollback(t *testing.T) {
 func TestParentsUntil(t *testing.T) {
 	sel := Doc().Find(".container-fluid").ParentsUntil("body")
 	AssertLength(t, sel.Nodes, 6)
+
+	selc := Doc().Find(".container-fluid").ParentsUntilCompiled(cascadia.MustCompile("body"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestParentsUntilRollback(t *testing.T) {
@@ -178,6 +198,11 @@ func TestParentsUntilNodesRollback(t *testing.T) {
 func TestParentsFilteredUntil(t *testing.T) {
 	sel := Doc().Find(".container-fluid").ParentsFilteredUntil(".pvk-content", "body")
 	AssertLength(t, sel.Nodes, 2)
+
+	selc := Doc().Find(".container-fluid").ParentsFilteredUntilCompiled(
+		cascadia.MustCompile(".pvk-content"),
+		cascadia.MustCompile("body"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestParentsFilteredUntilRollback(t *testing.T) {
@@ -189,8 +214,11 @@ func TestParentsFilteredUntilRollback(t *testing.T) {
 func TestParentsFilteredUntilSelection(t *testing.T) {
 	sel := Doc().Find(".container-fluid")
 	sel2 := Doc().Find(".row-fluid")
-	sel = sel.ParentsFilteredUntilSelection("div", sel2)
-	AssertLength(t, sel.Nodes, 3)
+	sel3 := sel.ParentsFilteredUntilSelection("div", sel2)
+	AssertLength(t, sel3.Nodes, 3)
+
+	selc := sel.ParentsFilteredUntilSelectionCompiled(cascadia.MustCompile("div"), sel2)
+	AssertSelEqual(t, sel3, selc)
 }
 
 func TestParentsFilteredUntilSelectionRollback(t *testing.T) {
@@ -238,6 +266,9 @@ func TestSiblings3(t *testing.T) {
 func TestSiblingsFiltered(t *testing.T) {
 	sel := Doc().Find(".pvk-gutter").SiblingsFiltered(".pvk-content")
 	AssertLength(t, sel.Nodes, 3)
+
+	selc := Doc().Find(".pvk-gutter").SiblingsFilteredCompiled(cascadia.MustCompile(".pvk-content"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestSiblingsFilteredRollback(t *testing.T) {
@@ -270,6 +301,9 @@ func TestNextNone(t *testing.T) {
 func TestNextFiltered(t *testing.T) {
 	sel := Doc().Find(".container-fluid").NextFiltered("div")
 	AssertLength(t, sel.Nodes, 2)
+
+	selc := Doc().Find(".container-fluid").NextFilteredCompiled(cascadia.MustCompile("div"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestNextFilteredRollback(t *testing.T) {
@@ -281,6 +315,9 @@ func TestNextFilteredRollback(t *testing.T) {
 func TestNextFiltered2(t *testing.T) {
 	sel := Doc().Find(".container-fluid").NextFiltered("[ng-view]")
 	AssertLength(t, sel.Nodes, 1)
+
+	selc := Doc().Find(".container-fluid").NextFilteredCompiled(cascadia.MustCompile("[ng-view]"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestPrev(t *testing.T) {
@@ -308,6 +345,9 @@ func TestPrevNone(t *testing.T) {
 func TestPrevFiltered(t *testing.T) {
 	sel := Doc().Find(".row-fluid").PrevFiltered(".row-fluid")
 	AssertLength(t, sel.Nodes, 5)
+
+	selc := Doc().Find(".row-fluid").PrevFilteredCompiled(cascadia.MustCompile(".row-fluid"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestPrevFilteredRollback(t *testing.T) {
@@ -340,6 +380,9 @@ func TestNextAllNone(t *testing.T) {
 func TestNextAllFiltered(t *testing.T) {
 	sel := Doc().Find("#cf2 .row-fluid").NextAllFiltered("[ng-cloak]")
 	AssertLength(t, sel.Nodes, 2)
+
+	selc := Doc().Find("#cf2 .row-fluid").NextAllFilteredCompiled(cascadia.MustCompile("[ng-cloak]"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestNextAllFilteredRollback(t *testing.T) {
@@ -351,6 +394,9 @@ func TestNextAllFilteredRollback(t *testing.T) {
 func TestNextAllFiltered2(t *testing.T) {
 	sel := Doc().Find(".close").NextAllFiltered("h4")
 	AssertLength(t, sel.Nodes, 1)
+
+	selc := Doc().Find(".close").NextAllFilteredCompiled(cascadia.MustCompile("h4"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestPrevAll(t *testing.T) {
@@ -378,6 +424,9 @@ func TestPrevAll2(t *testing.T) {
 func TestPrevAllFiltered(t *testing.T) {
 	sel := Doc().Find(".pvk-gutter").PrevAllFiltered(".pvk-content")
 	AssertLength(t, sel.Nodes, 3)
+
+	selc := Doc().Find(".pvk-gutter").PrevAllFilteredCompiled(cascadia.MustCompile(".pvk-content"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestPrevAllFilteredRollback(t *testing.T) {
@@ -390,18 +439,27 @@ func TestNextUntil(t *testing.T) {
 	sel := Doc().Find(".alert a").NextUntil("p")
 	AssertLength(t, sel.Nodes, 1)
 	AssertSelectionIs(t, sel, "h4")
+
+	selc := Doc().Find(".alert a").NextUntilCompiled(cascadia.MustCompile("p"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestNextUntil2(t *testing.T) {
 	sel := Doc().Find("#cf2-1").NextUntil("[ng-cloak]")
 	AssertLength(t, sel.Nodes, 1)
 	AssertSelectionIs(t, sel, "#cf2-2")
+
+	selc := Doc().Find("#cf2-1").NextUntilCompiled(cascadia.MustCompile("[ng-cloak]"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestNextUntilOrder(t *testing.T) {
 	sel := Doc().Find("#cf2-1").NextUntil("#cf2-4")
 	AssertLength(t, sel.Nodes, 2)
 	AssertSelectionIs(t, sel, "#cf2-2", "#cf2-3")
+
+	selc := Doc().Find("#cf2-1").NextUntilCompiled(cascadia.MustCompile("#cf2-4"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestNextUntilRollback(t *testing.T) {
@@ -444,18 +502,27 @@ func TestPrevUntil(t *testing.T) {
 	sel := Doc().Find(".alert p").PrevUntil("a")
 	AssertLength(t, sel.Nodes, 1)
 	AssertSelectionIs(t, sel, "h4")
+
+	selc := Doc().Find(".alert p").PrevUntilCompiled(cascadia.MustCompile("a"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestPrevUntil2(t *testing.T) {
 	sel := Doc().Find("[ng-cloak]").PrevUntil(":not([ng-cloak])")
 	AssertLength(t, sel.Nodes, 1)
 	AssertSelectionIs(t, sel, "[ng-cloak]")
+
+	selc := Doc().Find("[ng-cloak]").PrevUntilCompiled(cascadia.MustCompile(":not([ng-cloak])"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestPrevUntilOrder(t *testing.T) {
 	sel := Doc().Find("#cf2-4").PrevUntil("#cf2-1")
 	AssertLength(t, sel.Nodes, 2)
 	AssertSelectionIs(t, sel, "#cf2-3", "#cf2-2")
+
+	selc := Doc().Find("#cf2-4").PrevUntilCompiled(cascadia.MustCompile("#cf2-1"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestPrevUntilRollback(t *testing.T) {
@@ -498,6 +565,11 @@ func TestNextFilteredUntil(t *testing.T) {
 	sel := Doc2().Find(".two").NextFilteredUntil(".even", ".six")
 	AssertLength(t, sel.Nodes, 4)
 	AssertSelectionIs(t, sel, "#n3", "#n5", "#nf3", "#nf5")
+
+	selc := Doc2().Find(".two").NextFilteredUntilCompiled(
+		cascadia.MustCompile(".even"),
+		cascadia.MustCompile(".six"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestNextFilteredUntilRollback(t *testing.T) {
@@ -509,9 +581,12 @@ func TestNextFilteredUntilRollback(t *testing.T) {
 func TestNextFilteredUntilSelection(t *testing.T) {
 	sel := Doc2().Find(".even")
 	sel2 := Doc2().Find(".five")
-	sel = sel.NextFilteredUntilSelection(".even", sel2)
-	AssertLength(t, sel.Nodes, 2)
-	AssertSelectionIs(t, sel, "#n3", "#nf3")
+	sel3 := sel.NextFilteredUntilSelection(".even", sel2)
+	AssertLength(t, sel3.Nodes, 2)
+	AssertSelectionIs(t, sel3, "#n3", "#nf3")
+
+	selc := sel.NextFilteredUntilSelectionCompiled(cascadia.MustCompile(".even"), sel2)
+	AssertSelEqual(t, sel3, selc)
 }
 
 func TestNextFilteredUntilSelectionRollback(t *testing.T) {
@@ -524,9 +599,12 @@ func TestNextFilteredUntilSelectionRollback(t *testing.T) {
 func TestNextFilteredUntilNodes(t *testing.T) {
 	sel := Doc2().Find(".even")
 	sel2 := Doc2().Find(".four")
-	sel = sel.NextFilteredUntilNodes(".odd", sel2.Nodes...)
-	AssertLength(t, sel.Nodes, 4)
-	AssertSelectionIs(t, sel, "#n2", "#n6", "#nf2", "#nf6")
+	sel3 := sel.NextFilteredUntilNodes(".odd", sel2.Nodes...)
+	AssertLength(t, sel3.Nodes, 4)
+	AssertSelectionIs(t, sel3, "#n2", "#n6", "#nf2", "#nf6")
+
+	selc := sel.NextFilteredUntilNodesCompiled(cascadia.MustCompile(".odd"), sel2.Nodes...)
+	AssertSelEqual(t, sel3, selc)
 }
 
 func TestNextFilteredUntilNodesRollback(t *testing.T) {
@@ -540,6 +618,11 @@ func TestPrevFilteredUntil(t *testing.T) {
 	sel := Doc2().Find(".five").PrevFilteredUntil(".odd", ".one")
 	AssertLength(t, sel.Nodes, 4)
 	AssertSelectionIs(t, sel, "#n4", "#n2", "#nf4", "#nf2")
+
+	selc := Doc2().Find(".five").PrevFilteredUntilCompiled(
+		cascadia.MustCompile(".odd"),
+		cascadia.MustCompile(".one"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestPrevFilteredUntilRollback(t *testing.T) {
@@ -551,9 +634,12 @@ func TestPrevFilteredUntilRollback(t *testing.T) {
 func TestPrevFilteredUntilSelection(t *testing.T) {
 	sel := Doc2().Find(".odd")
 	sel2 := Doc2().Find(".two")
-	sel = sel.PrevFilteredUntilSelection(".odd", sel2)
-	AssertLength(t, sel.Nodes, 2)
-	AssertSelectionIs(t, sel, "#n4", "#nf4")
+	sel3 := sel.PrevFilteredUntilSelection(".odd", sel2)
+	AssertLength(t, sel3.Nodes, 2)
+	AssertSelectionIs(t, sel3, "#n4", "#nf4")
+
+	selc := sel.PrevFilteredUntilSelectionCompiled(cascadia.MustCompile(".odd"), sel2)
+	AssertSelEqual(t, sel3, selc)
 }
 
 func TestPrevFilteredUntilSelectionRollback(t *testing.T) {
@@ -583,6 +669,9 @@ func TestClosestItself(t *testing.T) {
 	sel2 := sel.Closest(".row")
 	AssertLength(t, sel2.Nodes, sel.Length())
 	AssertSelectionIs(t, sel2, "#n3", "#nf3")
+
+	selc := sel.ClosestCompiled(cascadia.MustCompile(".row"))
+	AssertSelEqual(t, sel2, selc)
 }
 
 func TestClosestNoDupes(t *testing.T) {
@@ -590,12 +679,18 @@ func TestClosestNoDupes(t *testing.T) {
 	sel2 := sel.Closest(".pvk-content")
 	AssertLength(t, sel2.Nodes, 1)
 	AssertClass(t, sel2, "pvk-content")
+
+	selc := sel.ClosestCompiled(cascadia.MustCompile(".pvk-content"))
+	AssertSelEqual(t, sel2, selc)
 }
 
 func TestClosestNone(t *testing.T) {
 	sel := Doc().Find("h4")
 	sel2 := sel.Closest("a")
 	AssertLength(t, sel2.Nodes, 0)
+
+	selc := sel.ClosestCompiled(cascadia.MustCompile("a"))
+	AssertSelEqual(t, sel2, selc)
 }
 
 func TestClosestMany(t *testing.T) {
@@ -603,6 +698,9 @@ func TestClosestMany(t *testing.T) {
 	sel2 := sel.Closest(".pvk-content")
 	AssertLength(t, sel2.Nodes, 2)
 	AssertSelectionIs(t, sel2, "#pc1", "#pc2")
+
+	selc := sel.ClosestCompiled(cascadia.MustCompile(".pvk-content"))
+	AssertSelEqual(t, sel2, selc)
 }
 
 func TestClosestRollback(t *testing.T) {

@@ -2,11 +2,16 @@ package goquery
 
 import (
 	"testing"
+
+	"code.google.com/p/cascadia"
 )
 
 func TestAdd(t *testing.T) {
 	sel := Doc().Find("div.row-fluid").Add("a")
 	AssertLength(t, sel.Nodes, 19)
+
+	selc := Doc().Find("div.row-fluid").AddCompiled(cascadia.MustCompile("a"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestAddRollback(t *testing.T) {

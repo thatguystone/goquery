@@ -2,11 +2,16 @@ package goquery
 
 import (
 	"testing"
+
+	"code.google.com/p/cascadia"
 )
 
 func TestFilter(t *testing.T) {
 	sel := Doc().Find(".span12").Filter(".alert")
 	AssertLength(t, sel.Nodes, 1)
+
+	selc := Doc().Find(".span12").FilterCompiled(cascadia.MustCompile(".alert"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestFilterNone(t *testing.T) {
@@ -72,6 +77,9 @@ func TestFilterSelectionNil(t *testing.T) {
 func TestNot(t *testing.T) {
 	sel := Doc().Find(".span12").Not(".alert")
 	AssertLength(t, sel.Nodes, 1)
+
+	selc := Doc().Find(".span12").NotCompiled(cascadia.MustCompile(".alert"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestNotRollback(t *testing.T) {
@@ -143,6 +151,9 @@ func TestHas(t *testing.T) {
 	sel := Doc().Find(".container-fluid").Has(".center-content")
 	AssertLength(t, sel.Nodes, 2)
 	// Has() returns the high-level .container-fluid div, and the one that is the immediate parent of center-content
+
+	selc := Doc().Find(".container-fluid").HasCompiled(cascadia.MustCompile(".center-content"))
+	AssertSelEqual(t, sel, selc)
 }
 
 func TestHasRollback(t *testing.T) {

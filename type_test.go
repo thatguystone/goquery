@@ -79,6 +79,15 @@ func AssertEqual(t *testing.T, s1 *Selection, s2 *Selection) {
 	}
 }
 
+func AssertSelEqual(t *testing.T, s1 *Selection, s2 *Selection) {
+	s1c := newEmptySelection(s1.document).AddSelection(s1).NotSelection(s2)
+	s2c := newEmptySelection(s1.document).AddSelection(s2).NotSelection(s1)
+
+	if s1c.Size() > 0 || s2c.Size() > 0 {
+		t.Error("Selections do not match")
+	}
+}
+
 func AssertSelectionIs(t *testing.T, sel *Selection, is ...string) {
 	for i := 0; i < sel.Length(); i++ {
 		if !sel.Eq(i).Is(is[i]) {

@@ -239,11 +239,11 @@ func (s *Selection) Remove() *Selection {
 // Filter the set of matched elements by selector before removing.
 // Returns the filtered Selection.
 func (s *Selection) RemoveFilter(selector string) *Selection {
-	return s.RemoveFilterSelector(cascadia.MustCompile(selector))
+	return s.RemoveFilterCompiled(cascadia.MustCompile(selector))
 }
 
 // Filter the set of matched elements by cascadia selector before removing.
 // Returns the filtered Selection.
-func (s *Selection) RemoveFilterSelector(cs cascadia.Selector) *Selection {
-	return s.FilterSelector(cs).Remove()
+func (s *Selection) RemoveFilterCompiled(cs cascadia.Selector) *Selection {
+	return s.FilterCompiled(cs).Remove()
 }
